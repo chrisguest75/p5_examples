@@ -9,4 +9,11 @@
     /* .debug-border {
       @apply border border-sky-950 px-1 border-x-4 border-y-4;
     } */
+
+    .brutalism-mask {
+      mask-image: url('../public/brutalism.svg');
+      mask-size: 100% 100%;
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
   }
