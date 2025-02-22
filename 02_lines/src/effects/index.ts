@@ -1,5 +1,6 @@
 import P5 from "p5";
 import { effectCircles } from "./circles";
+import { effectRectangles } from "./rectangles";
 
 export type Background = {
   name: string
@@ -11,6 +12,11 @@ export const backgrounds: Background[] = [
   {
       name: 'Circles',
       draw: effectCircles,
-      default: true
+        },
+  {
+    name: 'Rectangles',
+    draw: effectRectangles,
+    default: true
   },
+
 ]

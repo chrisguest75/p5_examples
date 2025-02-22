@@ -15,7 +15,6 @@ export function effectCircles(p5: P5) {
 
     p5.fill(0);
     const circle = { x: p5.mouseX, y: p5.mouseY, radius: RADIUS} 
-    p5.circle(circle.x, circle.y, circle.radius); 
     circles.push(circle);
 
     circles.forEach((circle) => {
