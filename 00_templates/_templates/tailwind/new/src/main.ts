@@ -5,7 +5,8 @@ import P5 from "p5";
 
 const sketch = (p5: P5) => {
   p5.setup = () => {
-      p5.createCanvas(p5.windowWidth, p5.windowHeight);
+      const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
+      canvas.parent("background")
       p5.background(255);
     };
 

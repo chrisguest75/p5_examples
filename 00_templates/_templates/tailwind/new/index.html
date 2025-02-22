@@ -48,9 +48,13 @@ to: <%= name %>/index.html
 <body class=" bg-blue-800 overflow-auto">
   <script type="module" src="src/main.ts"></script>
 
-  <div class="absolute z-2 flex flex-col">
+  <div id="background" class="absolute z-5 h-[100vh] w-[100vw] content-center">
+
+  </div>
+
+  <div class="absolute z-7 flex flex-col">
     <div class="flex flex-grow">
-      <div class="flex flex-row flex-grow h-[100vh]">
+      <div class="flex flex-row flex-grow w-[100vw] h-[100vh]">
         <div class="w-2/12 opacity-80 bg-gradient-to-r from-blue-950 to-blue-900"></div>
         <div class="w-2/12 opacity-80 bg-gradient-to-r from-blue-900 to-blue-800"></div>
         <div class="w-2/12 opacity-80 bg-gradient-to-r from-blue-800 to-blue-700"></div>
@@ -60,6 +64,15 @@ to: <%= name %>/index.html
       </div>
     </div>
   </div>
+
+  <div class="absolute h-[100vh] w-[100vw]">
+    <nav class="flex items-center justify-between flex-wrap bg-white-500  p-6">
+      <div class="flex items-center flex-shrink-0 text-white mr-6 opacity-30">
+        <span class="font-semibold text-3xl tracking-tight">Template</span>
+      </div>
+    </nav>
+  </div>
+
 </body>
 
 </html>
