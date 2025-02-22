@@ -1,0 +1,6 @@
+---
+to: <%= name %>/.gitignore
+---
+dist
+node_modules
+.parcel-cache

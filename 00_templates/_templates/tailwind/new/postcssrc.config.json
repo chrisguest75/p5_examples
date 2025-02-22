@@ -1,0 +1,8 @@
+---
+to: <%= name %>/postcssrc.config.json
+---
+{
+  "plugins": {
+    "tailwindcss": true
+  }
+}
