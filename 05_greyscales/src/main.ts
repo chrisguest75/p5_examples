@@ -12,8 +12,30 @@ interface Parallelogram {
 
 const sketch = (p5: P5) => {
   let parallelograms: Parallelogram[] = [];
+  let targetParallelograms: Parallelogram[] = [];
   let clippingRegion: { x: number; y: number; size: number } = { x: 0, y: 0, size: 0 };
   const numParallelograms = 12; // Reduced number since they're much larger now
+  
+  // Animation timing variables
+  let lastMorphTime = 0;
+  let morphDuration = 8000; // 8 seconds of morphing
+  let pauseDuration = 2000; // 2 seconds pause
+  let totalCycleDuration = morphDuration + pauseDuration; // 10 seconds total
+  let isAnimating = false;
+
+  // Helper function to interpolate between two values
+  const lerp = (start: number, end: number, t: number): number => {
+    return start + (end - start) * t;
+  };
+
+  // Helper function to create a complete set of parallelograms
+  const generateParallelogramSet = (): Parallelogram[] => {
+    const set: Parallelogram[] = [];
+    for (let i = 0; i < numParallelograms; i++) {
+      set.push(createRandomParallelogram());
+    }
+    return set;
+  };
 
   const calculateClippingRegion = () => {
     // Calculate square size based on the smallest dimension, with some margin
@@ -124,19 +146,58 @@ const sketch = (p5: P5) => {
     // Calculate clipping region
     calculateClippingRegion();
     
-    // Generate random parallelograms
-    for (let i = 0; i < numParallelograms; i++) {
-      parallelograms.push(createRandomParallelogram());
-    }
+    // Generate initial parallelograms and targets
+    parallelograms = generateParallelogramSet();
+    targetParallelograms = generateParallelogramSet();
+    lastMorphTime = p5.millis();
   };
 
   p5.draw = () => {
     p5.background(255);
     
-    // First, draw all parallelograms without clipping to test
-    // for (const para of parallelograms) {
-    //   drawParallelogram(para);
-    // }
+    // Handle animation timing
+    const currentTime = p5.millis();
+    const timeSinceLastMorph = currentTime - lastMorphTime;
+    
+    // Check if we need to start a new cycle
+    if (timeSinceLastMorph >= totalCycleDuration) {
+      // Start new morph cycle
+      parallelograms = [...targetParallelograms]; // Copy current targets to current
+      targetParallelograms = generateParallelogramSet(); // Generate new targets
+      lastMorphTime = currentTime;
+      isAnimating = true;
+    }
+    
+    // Calculate animation progress
+    let animationProgress = 0;
+    if (timeSinceLastMorph < morphDuration) {
+      // We're in the morphing phase
+      animationProgress = timeSinceLastMorph / morphDuration;
+      // Apply easing for smoother animation
+      animationProgress = 1 - Math.cos(animationProgress * Math.PI / 2); // Ease out
+      isAnimating = true;
+    } else {
+      // We're in the pause phase
+      animationProgress = 1;
+      isAnimating = false;
+    }
+    
+    // Create interpolated parallelograms for current frame
+    const currentParallelograms: Parallelogram[] = [];
+    for (let i = 0; i < numParallelograms; i++) {
+      const start = parallelograms[i];
+      const end = targetParallelograms[i];
+      
+      currentParallelograms.push({
+        x: lerp(start.x, end.x, animationProgress),
+        y: lerp(start.y, end.y, animationProgress),
+        width: lerp(start.width, end.width, animationProgress),
+        height: lerp(start.height, end.height, animationProgress),
+        angle: lerp(start.angle, end.angle, animationProgress),
+        skew: lerp(start.skew, end.skew, animationProgress),
+        color: lerp(start.color, end.color, animationProgress)
+      });
+    }
     
     // Draw clipping region outline (optional visual guide)
     p5.push();
@@ -150,12 +211,12 @@ const sketch = (p5: P5) => {
     const clippedGraphics = p5.createGraphics(p5.width, p5.height);
     
     // Draw all parallelograms to the graphics buffer
-    for (const para of parallelograms) {
+    for (const para of currentParallelograms) {
       clippedGraphics.push();
       clippedGraphics.translate(para.x, para.y);
       clippedGraphics.rotate(para.angle);
       
-      clippedGraphics.fill(para.color);
+      clippedGraphics.fill(para.color, 127); // 50% opacity (255 * 0.5 = 127.5)
       clippedGraphics.stroke(0);
       clippedGraphics.strokeWeight(2);
       
@@ -186,11 +247,10 @@ const sketch = (p5: P5) => {
   };
 
   p5.keyPressed = () => {
-    // Press any key to regenerate parallelograms
-    parallelograms = [];
-    for (let i = 0; i < numParallelograms; i++) {
-      parallelograms.push(createRandomParallelogram());
-    }
+    // Press any key to immediately trigger a new morph cycle
+    parallelograms = [...targetParallelograms];
+    targetParallelograms = generateParallelogramSet();
+    lastMorphTime = p5.millis();
   };
 
   p5.windowResized = () => {
@@ -199,10 +259,9 @@ const sketch = (p5: P5) => {
     // Recalculate clipping region for new canvas size
     calculateClippingRegion();
     // Regenerate parallelograms for new canvas size
-    parallelograms = [];
-    for (let i = 0; i < numParallelograms; i++) {
-      parallelograms.push(createRandomParallelogram());
-    }
+    parallelograms = generateParallelogramSet();
+    targetParallelograms = generateParallelogramSet();
+    lastMorphTime = p5.millis();
   };
 };
 
