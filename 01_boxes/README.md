@@ -1,6 +1,6 @@
 # BOXES
 
-A simple frst test to develop the template.  
+A simple first test to develop the template.  
 
 ## View from file
 

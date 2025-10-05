@@ -40,7 +40,7 @@ host:
   #!/usr/bin/env bash
   set -eufo pipefail
   mkdir -p ./dist/public
-  cp -R ./public/ ./dist/public/
+  #cp -R ./public/ ./dist/public/
   npm run start  
   
 watch:
